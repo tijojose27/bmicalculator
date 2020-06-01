@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:bmicalculator/main.dart';
+import 'file:///F:/FlutterPorjects/BMI_Calculator/bmicalculator/lib/Pages/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
