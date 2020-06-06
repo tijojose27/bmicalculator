@@ -11,3 +11,11 @@ double screenAwareSize(double size, BuildContext context) {
 }
 
 mainColor() => Color(0xFF4E5A86);
+
+
+bool isNumeric(String s) {
+  if(s == null) {
+    return false;
+  }
+  return s is int;
+}
