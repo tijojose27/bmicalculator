@@ -11,6 +11,7 @@ double screenAwareSize(double size, BuildContext context) {
 }
 
 mainColor() => Color(0xFF4E5A86);
+subColor() => Color(0xFF4E5A86).withOpacity(0.5);
 
 
 bool isNumeric(String s) {
@@ -19,3 +20,9 @@ bool isNumeric(String s) {
   }
   return s is int;
 }
+
+Map<String, int> gender = {
+  "male":  1,
+  "female" : 2,
+  "unknown" : 0
+};
