@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bmicalculator/Const/Util.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 int weight = 0;
+String gender = gend[0];
 
 class BMIPage extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,7 +29,7 @@ class BMIWidget extends StatelessWidget {
             Expanded(
                 child: Column(
               children: <Widget>[
-                Expanded(child: _tempCard("GENDER")),
+                Expanded(child: genderCard()),
                 Expanded(child: weightCard())
               ],
             ))
@@ -93,42 +95,7 @@ class _weightCardState extends State<weightCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Flexible(
-              flex: 1,
-              child: Container(
-                child: InkResponse(
-                  splashColor: subColor(),
-                  highlightColor: subColor(),
-                  onTap: () {},
-                  child: GestureDetector(
-                    onTap: () {
-                      var calcWeight = incrementWeight();
-                      _controller.text = calcWeight.toString();
-                    },
-                    onTapDown: (TapDownDetails details) {
-                      timer =
-                          Timer.periodic(Duration(milliseconds: 100), (timer) {
-                        setState(() {
-                          var calcWeight = incrementWeight();
-                          _controller.text = calcWeight.toString();
-                        });
-                      });
-                    },
-                    onTapCancel: () {
-                      timer.cancel();
-                    },
-                    onTapUp: (TapUpDetails details) {
-                      timer.cancel();
-                    },
-                    child: Icon(Icons.arrow_drop_up),
-                  ),
-                ),
-              )),
-
-
-//          setWeight(_controller, true),
-
-
+          weightBtn(_controller, true),
           Flexible(
             flex: 4,
             child: TextField(
@@ -148,116 +115,91 @@ class _weightCardState extends State<weightCard> {
                   color: mainColor(), fontSize: 35, fontFamily: 'Dosis'),
             ),
           ),
-
-
-//          setWeight(_controller, false)?
-
-          Flexible(
-              flex: 1,
-              child: Container(
-                child: InkResponse(
-                  splashColor: subColor(),
-                  highlightColor: subColor(),
-                  onTap: () {},
-                  child: GestureDetector(
-                    onTap: () {
-                      var calcWeight = decreaseWeight();
-                      _controller.text = calcWeight.toString();
-                    },
-                    onTapDown: (TapDownDetails details) {
-                      timer =
-                          Timer.periodic(Duration(milliseconds: 100), (timer) {
-                            setState(() {
-                              var calcWeight = decreaseWeight();
-                              _controller.text = calcWeight.toString();
-                            });
-                          });
-                    },
-                    onTapCancel: () {
-                      timer.cancel();
-                    },
-                    onTapUp: (TapUpDetails details) {
-                      timer.cancel();
-                    },
-                    child: Icon(Icons.arrow_drop_down),
-                  ),
-                ),
-              ))
+//          setWeight(_controller, false)
+          weightBtn(_controller, false),
         ],
       ),
     );
   }
 }
 
-class setWeight extends StatefulWidget {
-  TextEditingController myController;
+//WEIGHT STUFF
+//THIS
+//IS
+//FOR
+//SEPERATION
+
+class weightBtn extends StatefulWidget {
+  TextEditingController _controller;
   bool isIncreaseWeight;
 
-  setWeight(this.myController, this.isIncreaseWeight);
+  weightBtn(this._controller, this.isIncreaseWeight);
 
   @override
-  _setWeightState createState() =>
-      _setWeightState(myController, isIncreaseWeight);
+  _weightBtnState createState() =>
+      _weightBtnState(_controller, isIncreaseWeight);
 }
 
-class _setWeightState extends State<setWeight> {
-  TextEditingController myController;
+class _weightBtnState extends State<weightBtn> {
+  Timer timer;
+  TextEditingController _controller;
   bool isIncreaseWeight;
 
-  _setWeightState(this.myController, this.isIncreaseWeight);
-
-  Timer timer;
+  _weightBtnState(this._controller, this.isIncreaseWeight);
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      flex: 1,
-      child: Container(
-        child: InkResponse(
-          splashColor: subColor(),
-          highlightColor: subColor(),
-          onTap: () {},
-          child: GestureDetector(
-              onTap: () {
-                var calcWeight;
-                if (isIncreaseWeight) {
-                  calcWeight = incrementWeight();
-                } else {
-                  calcWeight = decreaseWeight();
-                }
-                myController.text = calcWeight.toString();
-              },
-              onTapDown: (TapDownDetails details) {
-                timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-                  setState(() {
-                    var calcWeight;
-                    if (isIncreaseWeight) {
-                      calcWeight = incrementWeight();
-                    } else {
-                      calcWeight = decreaseWeight();
-                    }
-                    myController.text = calcWeight.toString();
-                  });
-                });
-              },
-              onTapCancel: () {
-                timer.cancel();
-              },
-              onTapUp: (TapUpDetails details) {
-                timer.cancel();
-              },
-              child: getWeightIcon(isIncreaseWeight)),
-        ),
-      ),
-    );
+    return GestureDetector(
+        onTapDown: (TapDownDetails details) {
+          timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+            setState(() {
+              var calcWeight;
+              if (isIncreaseWeight) {
+                calcWeight = incrementWeight();
+              } else {
+                calcWeight = decreaseWeight();
+              }
+              _controller.text = calcWeight.toString();
+            });
+          });
+        },
+        onTapCancel: () {
+          timer.cancel();
+        },
+        onTapUp: (TapUpDetails details) {
+          timer.cancel();
+        },
+        child: RaisedButton(
+          color: subColor(),
+          padding: EdgeInsets.all(10.0),
+          shape: CircleBorder(),
+          onPressed: () {
+            var calcWeight;
+            if (isIncreaseWeight) {
+              calcWeight = incrementWeight();
+            } else {
+              calcWeight = decreaseWeight();
+            }
+            _controller.text = calcWeight.toString();
+          },
+          child: getWeightIcon(isIncreaseWeight),
+        ));
   }
 }
 
 Widget getWeightIcon(bool isIncreaseWeight) {
   if (isIncreaseWeight) {
-    return Icon(Icons.arrow_drop_up);
+    return Icon(
+      Icons.arrow_drop_up,
+      color: Colors.white,
+      size: 30,
+    );
   } else {
-    return Icon(Icons.arrow_drop_down);
+    return Icon(
+      Icons.arrow_drop_down,
+      color: Colors.white,
+      size: 30,
+    );
   }
 }
 
@@ -275,6 +217,57 @@ int incrementWeight() {
     weight = currWeight;
   }
   return weight;
+}
+
+
+
+
+//GENDER STUFF
+//THIS
+//IS
+//FOR
+//SEPERATION
+
+class genderCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPicker(
+      itemExtent: 50,
+      onSelectedItemChanged: (int index) {
+        switch (index) {
+          case 0:
+            gender = gend[0];
+            print(gender);
+            break;
+          case 1:
+            gender = gend[1];
+            print(gender);
+            break;
+          default:
+            gender = gend[2];
+            print(gender);
+            break;
+        }
+      },
+      children: <Widget>[
+        Text(
+          gend[0],
+          style:
+              TextStyle(color: mainColor(), fontSize: 30, fontFamily: 'Dosis'),
+        ),
+        Text(
+          gend[1],
+          style:
+              TextStyle(color: mainColor(), fontSize: 30, fontFamily: 'Dosis'),
+        ),
+        Text(
+          gend[2],
+          style:
+              TextStyle(color: mainColor(), fontSize: 30, fontFamily: 'Dosis'),
+        )
+      ],
+    );
+  }
 }
 
 Widget _tempCard(String label) {

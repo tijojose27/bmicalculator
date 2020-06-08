@@ -26,3 +26,5 @@ Map<String, int> gender = {
   "female" : 2,
   "unknown" : 0
 };
+
+List<String> gend = ["MALE", "FEMALE", "N/A"];
